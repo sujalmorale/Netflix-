@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Netflix+Sans:wght@300;400;500;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Netflix+Sans:wght@300;400;500;700&family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -23,15 +23,34 @@
                 <li><a href="#">My List</a></li>
             </ul>
         </div>
-        <div class="nav-icons">
+        <div class="nav-right">
             <i class="fas fa-search" title="Search"></i>
             <i class="fas fa-bell" title="Notifications"></i>
-            <a href="login.html" class="btn-signout" title="Sign Out" style="color: #e50914; text-decoration: none; font-size: 1.2rem; margin-left: 5px;">
+            <a href="login.html" class="btn-signout" title="Sign Out">
                 <i class="fas fa-sign-out-alt"></i>
             </a>
             <div class="profile-icon" title="Profile"></div>
         </div>
     </header>
+
+    <!-- Sub Header for Section Page Title & Genre Selector -->
+    <div class="sub-header" id="sub-header" style="display: none;">
+        <h2 class="sub-header-title" id="sub-header-title">TV Shows</h2>
+        <div class="genre-dropdown-container">
+            <select id="genre-select" class="genre-select">
+                <option value="all">Genres</option>
+                <option value="Action">Action</option>
+                <option value="Comedy">Comedy</option>
+                <option value="Crime">Crime</option>
+                <option value="Drama">Drama</option>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Horror">Horror</option>
+                <option value="Reality">Reality</option>
+                <option value="Sci-Fi">Sci-Fi</option>
+                <option value="Thriller">Thriller</option>
+            </select>
+        </div>
+    </div>
 
     <div id="hero" class="hero">
         <div class="hero-content">
@@ -54,11 +73,38 @@
     </div>
 
     <main class="content">
-        <section class="row">
+        <section class="row" id="row-trending-container">
             <h2 id="trending-title" class="row-title">Trending Now</h2>
             <div class="row-posters" id="trending-row"></div>
         </section>
         
+        <!-- TV Shows Specific Netflix Section Rows -->
+        <section class="row" id="row-top10-container" style="display: none;">
+            <h2 class="row-title">Top 10 Shows in India Today</h2>
+            <div class="row-posters top10-row" id="row-top10"></div>
+        </section>
+
+        <section class="row" id="row-indian-dramas-container" style="display: none;">
+            <h2 class="row-title">Indian TV Dramas</h2>
+            <div class="row-posters" id="row-indian-dramas"></div>
+        </section>
+
+        <section class="row" id="row-crowd-pleasers-container" style="display: none;">
+            <h2 class="row-title">Crowd Pleasers</h2>
+            <div class="row-posters" id="row-crowd-pleasers"></div>
+        </section>
+
+        <section class="row" id="row-tv-dramas-container" style="display: none;">
+            <h2 class="row-title">TV Dramas</h2>
+            <div class="row-posters" id="row-tv-dramas"></div>
+        </section>
+
+        <section class="row" id="row-captivating-container" style="display: none;">
+            <h2 class="row-title">So Completely Captivating</h2>
+            <div class="row-posters" id="row-captivating"></div>
+        </section>
+
+        <!-- Home Standard Rows -->
         <section class="row" id="row-thrillers-container">
             <h2 class="row-title">Thrillers with a Side of Action</h2>
             <div class="row-posters" id="row-thrillers"></div>

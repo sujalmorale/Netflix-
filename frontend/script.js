@@ -10,6 +10,8 @@ const hero = document.getElementById('hero');
 const heroTitle = document.getElementById('hero-title');
 const heroDesc = document.getElementById('hero-desc');
 const recommendSource = document.getElementById('recommend-source');
+const subHeader = document.getElementById('sub-header');
+const genreSelect = document.getElementById('genre-select');
 
 // Modal Elements
 const modal = document.getElementById('movie-modal');
@@ -61,39 +63,54 @@ async function fetchMovies() {
     } catch (error) {
         console.error("Error fetching movies:", error);
         heroTitle.innerText = "Error loading content";
-        heroDesc.innerText = "Please ensure the backend is running at http://127.0.0.1:5000";
+        heroDesc.innerText = "Please ensure the backend is running properly.";
     }
 }
 
 function renderPage(category) {
     currentCategory = category;
     
-    // Filter movies
-    let filteredMovies = allMovies;
     if (category === 'series') {
-        filteredMovies = allMovies.filter(m => m.type === 'series');
-        trendingTitle.innerText = "Trending TV Shows";
-        hideOtherRows();
+        // TV Shows Page
+        if (subHeader) subHeader.style.display = 'flex';
+        document.getElementById('sub-header-title').innerText = "TV Shows";
+        if (genreSelect) genreSelect.value = "all";
+
+        hideHomeRows();
+        showTvShowRows();
+        populateTvShowRows('all');
+
+        const tvShows = allMovies.filter(m => m.type === 'series' || m.type === 'indian_serial');
+        if (tvShows.length > 0) {
+            const heroShow = tvShows.find(m => m.title === "Wednesday") || tvShows[0];
+            setHero(heroShow);
+            fetchRecommendations(heroShow);
+        }
     } else if (category === 'movie') {
-        filteredMovies = allMovies.filter(m => m.type === 'movie');
+        if (subHeader) subHeader.style.display = 'none';
         trendingTitle.innerText = "Trending Movies";
-        hideOtherRows();
-    } else if (category === 'indian_serial') {
-        filteredMovies = allMovies.filter(m => m.type === 'indian_serial');
-        trendingTitle.innerText = "Popular Indian Serials";
-        hideOtherRows();
+        hideTvShowRows();
+        hideHomeRows();
+        document.getElementById('row-trending-container').style.display = 'block';
+
+        const movies = allMovies.filter(m => m.type === 'movie');
+        if (movies.length > 0) {
+            setHero(movies[0]);
+            renderRow(movies, document.getElementById('trending-row'));
+            fetchRecommendations(movies[0]);
+        }
     } else {
+        // Home Page
+        if (subHeader) subHeader.style.display = 'none';
         trendingTitle.innerText = "Trending Now";
-        showAllRows();
+        hideTvShowRows();
+        showHomeRows();
         populateSpecificRows();
-    }
-    
-    // Set first movie as hero
-    if (filteredMovies.length > 0) {
-        setHero(filteredMovies[0]);
-        renderRow(filteredMovies, document.getElementById('trending-row'));
-        // Fetch recommendations for the first movie by default
-        fetchRecommendations(filteredMovies[0]);
+        if (allMovies.length > 0) {
+            setHero(allMovies[0]);
+            renderRow(allMovies, document.getElementById('trending-row'));
+            fetchRecommendations(allMovies[0]);
+        }
     }
 }
 
@@ -101,16 +118,79 @@ function renderRow(movies, container) {
     if (!container) return;
     container.innerHTML = '';
     movies.forEach(movie => {
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('poster-wrapper');
+
         const img = document.createElement('img');
         img.src = movie.poster_url;
         img.classList.add('poster');
         img.alt = movie.title;
         img.onclick = () => openModal(movie);
-        container.appendChild(img);
+        wrapper.appendChild(img);
+
+        if (movie.badge) {
+            const badge = document.createElement('div');
+            badge.classList.add('card-badge');
+            badge.innerText = movie.badge;
+            wrapper.appendChild(badge);
+        }
+
+        container.appendChild(wrapper);
     });
 }
 
-function hideOtherRows() {
+function renderTop10Row(movies, container) {
+    if (!container) return;
+    container.innerHTML = '';
+    movies.forEach((movie, index) => {
+        const card = document.createElement('div');
+        card.classList.add('top10-card');
+        card.onclick = () => openModal(movie);
+
+        const rankNum = document.createElement('div');
+        rankNum.classList.add('top10-number');
+        rankNum.innerText = index + 1;
+
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('top10-poster-wrapper');
+
+        const img = document.createElement('img');
+        img.src = movie.poster_url;
+        img.classList.add('top10-poster');
+        img.alt = movie.title;
+        wrapper.appendChild(img);
+
+        if (movie.badge) {
+            const badge = document.createElement('div');
+            badge.classList.add('card-badge');
+            badge.innerText = movie.badge;
+            wrapper.appendChild(badge);
+        }
+
+        card.appendChild(rankNum);
+        card.appendChild(wrapper);
+        container.appendChild(card);
+    });
+}
+
+function hideTvShowRows() {
+    document.getElementById('row-top10-container').style.display = 'none';
+    document.getElementById('row-indian-dramas-container').style.display = 'none';
+    document.getElementById('row-crowd-pleasers-container').style.display = 'none';
+    document.getElementById('row-tv-dramas-container').style.display = 'none';
+    document.getElementById('row-captivating-container').style.display = 'none';
+}
+
+function showTvShowRows() {
+    document.getElementById('row-top10-container').style.display = 'block';
+    document.getElementById('row-indian-dramas-container').style.display = 'block';
+    document.getElementById('row-crowd-pleasers-container').style.display = 'block';
+    document.getElementById('row-tv-dramas-container').style.display = 'block';
+    document.getElementById('row-captivating-container').style.display = 'block';
+}
+
+function hideHomeRows() {
+    document.getElementById('row-trending-container').style.display = 'none';
     document.getElementById('row-thrillers-container').style.display = 'none';
     document.getElementById('row-comedies-container').style.display = 'none';
     document.getElementById('row-familiar-container').style.display = 'none';
@@ -119,7 +199,8 @@ function hideOtherRows() {
     document.getElementById('row-international-container').style.display = 'none';
 }
 
-function showAllRows() {
+function showHomeRows() {
+    document.getElementById('row-trending-container').style.display = 'block';
     document.getElementById('row-thrillers-container').style.display = 'block';
     document.getElementById('row-comedies-container').style.display = 'block';
     document.getElementById('row-familiar-container').style.display = 'block';
@@ -128,13 +209,46 @@ function showAllRows() {
     document.getElementById('row-international-container').style.display = 'block';
 }
 
+function populateTvShowRows(selectedGenre = 'all') {
+    let tvSeries = allMovies.filter(m => m.type === 'series' || m.type === 'indian_serial');
+    
+    if (selectedGenre !== 'all') {
+        tvSeries = tvSeries.filter(m => m.genre.toLowerCase().includes(selectedGenre.toLowerCase()));
+    }
+
+    // 1. Top 10 Shows in India Today
+    const top10Titles = ["Musafir Cafe", "Lock Upp", "The East Palace", "SmackDown", "Elite Force", "Agent Kim Reactivated", "Sacred Games", "Mirzapur", "Wednesday", "Panchayat"];
+    const top10Shows = top10Titles.map(title => tvSeries.find(m => m.title === title)).filter(Boolean);
+    renderTop10Row(top10Shows, document.getElementById('row-top10'));
+
+    // 2. Indian TV Dramas
+    const indianDramaTitles = ["Super Subbu", "Taskaree", "Glory", "The Ba***ds of Bollywood", "Sacred Games", "Mismatched", "Mirzapur", "Panchayat", "The Family Man"];
+    const indianDramas = tvSeries.filter(m => indianDramaTitles.includes(m.title));
+    renderRow(indianDramas, document.getElementById('row-indian-dramas'));
+
+    // 3. Crowd Pleasers
+    const crowdPleaserTitles = ["Wednesday", "All of Us Are Dead", "Bon Appétit, Your Majesty", "The Good Doctor", "The Witcher", "I Will Find You", "Stranger Things"];
+    const crowdPleasers = tvSeries.filter(m => crowdPleaserTitles.includes(m.title));
+    renderRow(crowdPleasers, document.getElementById('row-crowd-pleasers'));
+
+    // 4. TV Dramas
+    const tvDramaTitles = ["The Mentalist", "Suits", "Vikings", "Lucifer", "Bloodhounds", "Dark", "Breaking Bad"];
+    const tvDramas = tvSeries.filter(m => tvDramaTitles.includes(m.title));
+    renderRow(tvDramas, document.getElementById('row-tv-dramas'));
+
+    // 5. So Completely Captivating
+    const captivatingTitles = ["Alice in Borderland", "The Vampire Diaries", "Human Vapor", "3 Body Problem", "Death Note", "Manifest", "My Demon"];
+    const captivating = tvSeries.filter(m => captivatingTitles.includes(m.title));
+    renderRow(captivating, document.getElementById('row-captivating'));
+}
+
 function populateSpecificRows() {
     // Thrillers
     const thrillers = allMovies.filter(m => m.genre.includes('Thriller'));
     renderRow(thrillers, document.getElementById('row-thrillers'));
 
     // TV Comedies
-    const comedies = allMovies.filter(m => m.genre.includes('Comedy') && m.type === 'series');
+    const comedies = allMovies.filter(m => m.genre.includes('Comedy') && (m.type === 'series' || m.type === 'indian_serial'));
     renderRow(comedies, document.getElementById('row-comedies'));
 
     // Familiar
@@ -180,8 +294,14 @@ navMovies.addEventListener('click', (e) => {
 navNew.addEventListener('click', (e) => {
     e.preventDefault();
     updateActiveNav(navNew);
-    renderPage('indian_serial');
+    renderPage('series');
 });
+
+if (genreSelect) {
+    genreSelect.addEventListener('change', (e) => {
+        populateTvShowRows(e.target.value);
+    });
+}
 
 function updateActiveNav(activeElement) {
     navLinks.forEach(link => link.classList.remove('active'));
@@ -193,8 +313,6 @@ function setHero(movie) {
     heroTitle.innerText = movie.title;
     heroDesc.innerText = movie.description;
 }
-
-
 
 // Fetch Recommendations
 async function fetchRecommendations(sourceMovie) {
@@ -210,7 +328,7 @@ async function fetchRecommendations(sourceMovie) {
 
 function renderRecommendations(movies) {
     recommendationsRow.innerHTML = '';
-    if (movies.length === 0) {
+    if (!movies || movies.length === 0) {
         recommendationsRow.innerHTML = '<p>No recommendations found.</p>';
         return;
     }
@@ -247,9 +365,7 @@ async function openModal(movie) {
             const el = document.createElement('div');
             el.classList.add('similar-item');
             el.onclick = () => {
-                // Change modal context to new movie
                 openModal(rec);
-                // Also update the main row below
                 fetchRecommendations(rec);
             };
             

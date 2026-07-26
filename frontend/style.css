@@ -75,21 +75,52 @@ body {
     font-weight: 500;
 }
 
-.nav-right {
+.nav-right, .nav-icons {
     display: flex;
     align-items: center;
     gap: 20px;
     font-size: 1.2rem;
+    color: #ffffff;
+}
+
+.nav-right i, .nav-icons i {
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.nav-right i:hover, .nav-icons i:hover {
+    color: #b3b3b3;
+    transform: scale(1.1);
+}
+
+.btn-signout {
+    color: #e50914;
+    text-decoration: none;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-signout:hover {
+    color: #ff1e27;
+    transform: scale(1.1);
 }
 
 .profile-icon {
     width: 32px;
     height: 32px;
-    background-color: #333;
+    background-color: #107c91;
     border-radius: 4px;
-    background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png');
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%224%22%20fill%3D%22%23107c91%22%2F%3E%3Ccircle%20cx%3D%2210%22%20cy%3D%2212%22%20r%3D%222%22%20fill%3D%22%23ffffff%22%2F%3E%3Ccircle%20cx%3D%2222%22%20cy%3D%2212%22%20r%3D%222%22%20fill%3D%22%23ffffff%22%2F%3E%3Cpath%20d%3D%22M10%2020%20Q16%2026%2022%2020%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E");
     background-size: cover;
     cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.profile-icon:hover {
+    transform: scale(1.08);
 }
 
 /* Hero Section */
@@ -602,3 +633,130 @@ body {
     .login-form { flex-direction: column; align-items: center; }
     .input-group input, .btn-get-started { width: 100%; }
 }
+
+/* Sub Header for TV Shows & Movies Category Pages */
+.sub-header {
+    position: relative;
+    top: 0;
+    z-index: 100;
+    padding: 20px 4% 10px 4%;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    background-color: var(--bg-color);
+    margin-top: 60px;
+}
+
+.sub-header-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+}
+
+.genre-dropdown-container {
+    position: relative;
+}
+
+.genre-select {
+    background-color: #000000;
+    color: #ffffff;
+    border: 1px solid #757575;
+    padding: 6px 32px 6px 14px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 2px;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22293%22%20height%3D%22293%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M236%20129L146%20219%2056%20129z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px;
+}
+
+.genre-select:hover {
+    background-color: #141414;
+    border-color: #ffffff;
+}
+
+/* Top 10 Row Styling */
+.top10-row {
+    display: flex;
+    overflow-x: scroll;
+    padding: 20px 0;
+    gap: 0px;
+}
+
+.top10-card {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-width: 260px;
+    height: 220px;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.top10-card:hover {
+    transform: scale(1.08);
+    z-index: 10;
+}
+
+.top10-number {
+    font-size: 11rem;
+    font-weight: 900;
+    line-height: 0.75;
+    color: #000000;
+    -webkit-text-stroke: 4px #595959;
+    position: absolute;
+    bottom: -5px;
+    left: -15px;
+    z-index: 1;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -12px;
+    user-select: none;
+}
+
+.top10-poster-wrapper {
+    position: relative;
+    z-index: 2;
+    margin-left: 75px;
+    height: 100%;
+}
+
+.top10-poster {
+    width: 145px;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+}
+
+.card-badge {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: 90%;
+    background: #e50914;
+    color: #ffffff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 3px 6px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    white-space: nowrap;
+}
+
+.poster-wrapper {
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
