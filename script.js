@@ -73,10 +73,11 @@ function renderPage(category) {
     if (category === 'series') {
         // TV Shows Page
         if (subHeader) subHeader.style.display = 'flex';
-        document.getElementById('sub-header-title').innerText = "TV Shows";
+        document.getElementById('sub-header-title').innerHTML = '<i class="fas fa-tv"></i> TV Shows';
         if (genreSelect) genreSelect.value = "all";
 
         hideHomeRows();
+        hideMovieRows();
         showTvShowRows();
         populateTvShowRows('all');
 
@@ -87,23 +88,28 @@ function renderPage(category) {
             fetchRecommendations(heroShow);
         }
     } else if (category === 'movie') {
-        if (subHeader) subHeader.style.display = 'none';
-        trendingTitle.innerText = "Trending Movies";
-        hideTvShowRows();
+        // Movies Page
+        if (subHeader) subHeader.style.display = 'flex';
+        document.getElementById('sub-header-title').innerHTML = '<i class="fas fa-film"></i> Movies';
+        if (genreSelect) genreSelect.value = "all";
+
         hideHomeRows();
-        document.getElementById('row-trending-container').style.display = 'block';
+        hideTvShowRows();
+        showMovieRows();
+        populateMovieRows('all');
 
         const movies = allMovies.filter(m => m.type === 'movie');
         if (movies.length > 0) {
-            setHero(movies[0]);
-            renderRow(movies, document.getElementById('trending-row'));
-            fetchRecommendations(movies[0]);
+            const heroMovie = movies.find(m => m.title === "Raja Shivaji") || movies.find(m => m.title === "Border 2") || movies[0];
+            setHero(heroMovie);
+            fetchRecommendations(heroMovie);
         }
     } else {
         // Home Page
         if (subHeader) subHeader.style.display = 'none';
         trendingTitle.innerText = "Trending Now";
         hideTvShowRows();
+        hideMovieRows();
         showHomeRows();
         populateSpecificRows();
         if (allMovies.length > 0) {
@@ -189,6 +195,38 @@ function showTvShowRows() {
     document.getElementById('row-captivating-container').style.display = 'block';
 }
 
+function hideMovieRows() {
+    document.getElementById('row-movie-top10-container').style.display = 'none';
+    document.getElementById('row-new-blockbusters-container').style.display = 'none';
+    document.getElementById('row-scifi-spectacles-container').style.display = 'none';
+    document.getElementById('row-horror-thrillers-container').style.display = 'none';
+    document.getElementById('row-hindi-highlights-container').style.display = 'none';
+    document.getElementById('row-popular-releases-container').style.display = 'none';
+    document.getElementById('row-hindi-movies-container').style.display = 'none';
+    document.getElementById('row-south-dubbed-container').style.display = 'none';
+    document.getElementById('row-emotional-movies-container').style.display = 'none';
+    document.getElementById('row-award-directors-container').style.display = 'none';
+    document.getElementById('row-movie-comedies-container').style.display = 'none';
+    document.getElementById('row-suspenseful-us-container').style.display = 'none';
+    document.getElementById('row-crime-movies-container').style.display = 'none';
+}
+
+function showMovieRows() {
+    document.getElementById('row-movie-top10-container').style.display = 'block';
+    document.getElementById('row-new-blockbusters-container').style.display = 'block';
+    document.getElementById('row-scifi-spectacles-container').style.display = 'block';
+    document.getElementById('row-horror-thrillers-container').style.display = 'block';
+    document.getElementById('row-hindi-highlights-container').style.display = 'block';
+    document.getElementById('row-popular-releases-container').style.display = 'block';
+    document.getElementById('row-hindi-movies-container').style.display = 'block';
+    document.getElementById('row-south-dubbed-container').style.display = 'block';
+    document.getElementById('row-emotional-movies-container').style.display = 'block';
+    document.getElementById('row-award-directors-container').style.display = 'block';
+    document.getElementById('row-movie-comedies-container').style.display = 'block';
+    document.getElementById('row-suspenseful-us-container').style.display = 'block';
+    document.getElementById('row-crime-movies-container').style.display = 'block';
+}
+
 function hideHomeRows() {
     document.getElementById('row-trending-container').style.display = 'none';
     document.getElementById('row-thrillers-container').style.display = 'none';
@@ -217,12 +255,12 @@ function populateTvShowRows(selectedGenre = 'all') {
     }
 
     // 1. Top 10 Shows in India Today
-    const top10Titles = ["Musafir Cafe", "Lock Upp", "The East Palace", "SmackDown", "Elite Force", "Agent Kim Reactivated", "Sacred Games", "Mirzapur", "Wednesday", "Panchayat"];
+    const top10Titles = ["Musafir Cafe", "Lock Upp", "The East Palace", "SmackDown", "Elite Force", "Agent Kim Reactivated", "Kohrra Season 2", "Sacred Games", "Mirzapur", "Wednesday"];
     const top10Shows = top10Titles.map(title => tvSeries.find(m => m.title === title)).filter(Boolean);
     renderTop10Row(top10Shows, document.getElementById('row-top10'));
 
     // 2. Indian TV Dramas
-    const indianDramaTitles = ["Super Subbu", "Taskaree", "Glory", "The Ba***ds of Bollywood", "Sacred Games", "Mismatched", "Mirzapur", "Panchayat", "The Family Man"];
+    const indianDramaTitles = ["Kohrra Season 2", "Super Subbu", "Taskaree", "Glory", "The Ba***ds of Bollywood", "Sacred Games", "Mismatched", "Mirzapur", "Panchayat", "The Family Man"];
     const indianDramas = tvSeries.filter(m => indianDramaTitles.includes(m.title));
     renderRow(indianDramas, document.getElementById('row-indian-dramas'));
 
@@ -232,7 +270,7 @@ function populateTvShowRows(selectedGenre = 'all') {
     renderRow(crowdPleasers, document.getElementById('row-crowd-pleasers'));
 
     // 4. TV Dramas
-    const tvDramaTitles = ["The Mentalist", "Suits", "Vikings", "Lucifer", "Bloodhounds", "Dark", "Breaking Bad"];
+    const tvDramaTitles = ["The Mentalist", "Suits", "Vikings", "Lucifer", "Bloodhounds", "Dark", "Breaking Bad", "Kohrra Season 2"];
     const tvDramas = tvSeries.filter(m => tvDramaTitles.includes(m.title));
     renderRow(tvDramas, document.getElementById('row-tv-dramas'));
 
@@ -240,6 +278,79 @@ function populateTvShowRows(selectedGenre = 'all') {
     const captivatingTitles = ["Alice in Borderland", "The Vampire Diaries", "Human Vapor", "3 Body Problem", "Death Note", "Manifest", "My Demon"];
     const captivating = tvSeries.filter(m => captivatingTitles.includes(m.title));
     renderRow(captivating, document.getElementById('row-captivating'));
+}
+
+function populateMovieRows(selectedGenre = 'all') {
+    let movies = allMovies.filter(m => m.type === 'movie');
+    
+    if (selectedGenre !== 'all') {
+        movies = movies.filter(m => m.genre.toLowerCase().includes(selectedGenre.toLowerCase()));
+    }
+
+    // Top 10 Movies in India Today
+    const top10Titles = ["Border 2", "Raja Shivaji", "Ikkis", "Subedaar", "Vadh 2", "Assi", "Avengers: Doomsday", "Project Hail Mary", "Con City", "Ikka"];
+    const top10Movies = top10Titles.map(title => movies.find(m => m.title === title)).filter(Boolean);
+    renderTop10Row(top10Movies, document.getElementById('row-movie-top10'));
+
+    // New Blockbusters & Anticipated Releases
+    const blockbusterTitles = ["Border 2", "Raja Shivaji", "Subedaar", "Ikkis", "Project Hail Mary", "Avengers: Doomsday", "28 Years Later: The Bone Temple", "Masters of the Universe", "The Odyssey"];
+    const blockbusterMovies = movies.filter(m => blockbusterTitles.includes(m.title));
+    renderRow(blockbusterMovies, document.getElementById('row-new-blockbusters'));
+
+    // Sci-Fi & Epic Fantasies
+    const scifiTitles = ["Project Hail Mary", "Avengers: Doomsday", "Masters of the Universe", "The Odyssey", "Dune: Part Two", "Dune", "Inception", "The Matrix"];
+    const scifiMovies = movies.filter(m => scifiTitles.includes(m.title));
+    renderRow(scifiMovies, document.getElementById('row-scifi-spectacles'));
+
+    // Horror & Psychological Thrillers
+    const horrorTitles = ["Vadh 2", "Backrooms", "28 Years Later: The Bone Temple", "Obsession", "Send Help", "Bhoot Bangla", "Frankenstein"];
+    const horrorMovies = movies.filter(m => horrorTitles.includes(m.title));
+    renderRow(horrorMovies, document.getElementById('row-horror-thrillers'));
+
+    // Hindi Cinema Highlights
+    const hindiHighlightTitles = ["Raja Shivaji", "Subedaar", "Border 2", "Ikkis", "Azad Bharath", "Bihu Attack", "Assi", "Bhabiji Ghar Par Hain! Fun on the Run", "Main Vaapas Aaunga", "Governor: The Silent Saviour"];
+    const hindiHighlightMovies = movies.filter(m => hindiHighlightTitles.includes(m.title));
+    renderRow(hindiHighlightMovies, document.getElementById('row-hindi-highlights'));
+
+    // Popular Releases & Comedies
+    const popularTitles = ["Happy Patel Khatarnak Jasoos", "Tu Yaa Main", "Paro Pinaki Ki Kahani", "O Romeo", "Ek Din", "Chand Mera Dil", "Michael", "Coyote vs. Acme", "Office Romance", "Send Help"];
+    const popularMovies = movies.filter(m => popularTitles.includes(m.title));
+    renderRow(popularMovies, document.getElementById('row-popular-releases'));
+
+    // Hindi Movies & TV
+    const hindiTitles = ["Raja Shivaji", "Subedaar", "Border 2", "Ikkis", "Bhoot Bangla", "Mahavatara Narsimha", "Saiyaara", "Tere Ishk Mein", "Animal", "Jaat"];
+    const hindiMovies = movies.filter(m => hindiTitles.includes(m.title));
+    renderRow(hindiMovies, document.getElementById('row-hindi-movies'));
+
+    // South Indian Films Dubbed in Hindi
+    const southTitles = ["With Love", "29", "Idli Kadai", "Sing Geetham", "Meiyazhagan", "Made in Korea", "Devara", "Lucky Baskhar"];
+    const southMovies = movies.filter(m => southTitles.includes(m.title));
+    renderRow(southMovies, document.getElementById('row-south-dubbed'));
+
+    // Emotional Movies
+    const emotionalTitles = ["O Romeo", "Paro Pinaki Ki Kahani", "Ek Din", "Chand Mera Dil", "The Girlfriend", "The Great Flood", "Court", "Amaran", "Bison", "Even If This Love Disappears Tonight", "Main Vaapas Aaunga"];
+    const emotionalMovies = movies.filter(m => emotionalTitles.includes(m.title));
+    renderRow(emotionalMovies, document.getElementById('row-emotional-movies'));
+
+    // Award-Winning Directors
+    const directorTitles = ["Frankenstein", "Dune: Part Two", "Dune", "Lucy", "Gladiator II", "Fight Club", "Inception", "Interstellar"];
+    const directorMovies = movies.filter(m => directorTitles.includes(m.title));
+    renderRow(directorMovies, document.getElementById('row-award-directors'));
+
+    // Comedies
+    const comedyTitles = ["Happy Patel Khatarnak Jasoos", "Tu Yaa Main", "Paro Pinaki Ki Kahani", "Voicemails for Isabelle", "MohiniYattam", "Anaganaga Oka Raju", "Raakaasa", "Gatta Kusthi", "Little Hearts", "Coyote vs. Acme", "Office Romance", "Bhabiji Ghar Par Hain! Fun on the Run"];
+    const comedyMovies = movies.filter(m => comedyTitles.includes(m.title));
+    renderRow(comedyMovies, document.getElementById('row-movie-comedies'));
+
+    // Suspenseful US Movies
+    const usTitles = ["Apex", "War Machine", "Spider-Man: Homecoming", "Spider-Man: Far From Home", "Thrash", "Godzilla x Kong: The New Empire", "Inception", "The Dark Knight"];
+    const usMovies = movies.filter(m => usTitles.includes(m.title));
+    renderRow(usMovies, document.getElementById('row-suspenseful-us'));
+
+    // Crime Movies
+    const crimeTitles = ["Vadh 2", "Assi", "Ikka", "Dhurandhar", "Kara", "Lucky Baskhar", "Devara", "HIT: The Third Case", "Con City", "Animal", "Governor: The Silent Saviour"];
+    const crimeMovies = movies.filter(m => crimeTitles.includes(m.title));
+    renderRow(crimeMovies, document.getElementById('row-crime-movies'));
 }
 
 function populateSpecificRows() {
@@ -299,7 +410,11 @@ navNew.addEventListener('click', (e) => {
 
 if (genreSelect) {
     genreSelect.addEventListener('change', (e) => {
-        populateTvShowRows(e.target.value);
+        if (currentCategory === 'series') {
+            populateTvShowRows(e.target.value);
+        } else if (currentCategory === 'movie') {
+            populateMovieRows(e.target.value);
+        }
     });
 }
 
