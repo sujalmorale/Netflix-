@@ -24,7 +24,10 @@
             </ul>
         </div>
         <div class="nav-right">
-            <i class="fas fa-search" title="Search"></i>
+            <div class="search-container">
+                <i class="fas fa-search search-icon" id="search-btn" title="Search"></i>
+                <input type="text" id="search-input" class="search-input" placeholder="Titles, genres, keywords...">
+            </div>
             <i class="fas fa-bell" title="Notifications"></i>
             <a href="login.html" class="btn-signout" title="Sign Out">
                 <i class="fas fa-sign-out-alt"></i>
@@ -73,6 +76,12 @@
     </div>
 
     <main class="content">
+        <!-- Live Search Results Section -->
+        <section class="row" id="row-search-container" style="display: none;">
+            <h2 class="row-title" id="search-results-title">Search Results</h2>
+            <div class="row-posters" id="search-results-row"></div>
+        </section>
+
         <section class="row" id="row-trending-container">
             <h2 id="trending-title" class="row-title">Trending Now</h2>
             <div class="row-posters" id="trending-row"></div>

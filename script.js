@@ -418,6 +418,38 @@ if (genreSelect) {
     });
 }
 
+// Live Search Bar Logic
+const searchInput = document.getElementById('search-input');
+const searchRowContainer = document.getElementById('row-search-container');
+const searchResultsRow = document.getElementById('search-results-row');
+const searchResultsTitle = document.getElementById('search-results-title');
+
+if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim().toLowerCase();
+        
+        if (query.length > 0) {
+            const matches = allMovies.filter(m => 
+                m.title.toLowerCase().includes(query) || 
+                m.genre.toLowerCase().includes(query) || 
+                m.description.toLowerCase().includes(query)
+            );
+            
+            searchRowContainer.style.display = 'block';
+            searchResultsTitle.innerHTML = `Search Results for "<span class="highlight">${e.target.value}</span>" (${matches.length})`;
+            
+            if (matches.length > 0) {
+                renderRow(matches, searchResultsRow);
+            } else {
+                searchResultsRow.innerHTML = `<p style="color: #aaa; padding: 20px 0;">No titles found matching "${e.target.value}". Try searching for another title or genre.</p>`;
+            }
+        } else {
+            searchRowContainer.style.display = 'none';
+            searchResultsRow.innerHTML = '';
+        }
+    });
+}
+
 function updateActiveNav(activeElement) {
     navLinks.forEach(link => link.classList.remove('active'));
     activeElement.classList.add('active');
