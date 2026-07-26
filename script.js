@@ -61,7 +61,7 @@ async function fetchMovies() {
     } catch (error) {
         console.error("Error fetching movies:", error);
         heroTitle.innerText = "Error loading content";
-        heroDesc.innerText = "Please ensure the backend is running at http://127.0.0.1:5000";
+        heroDesc.innerText = "Please ensure the backend is running properly.";
     }
 }
 
@@ -193,8 +193,6 @@ function setHero(movie) {
     heroTitle.innerText = movie.title;
     heroDesc.innerText = movie.description;
 }
-
-
 
 // Fetch Recommendations
 async function fetchRecommendations(sourceMovie) {
